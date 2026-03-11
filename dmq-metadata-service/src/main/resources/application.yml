@@ -1,0 +1,114 @@
+server:
+  port: ${SERVER_PORT:9091}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+spring:
+  application:
+    name: dmq-metadata-service
+  main:
+    allow-circular-references: true
+
+  # PostgreSQL database (shared by all metadata services, written by leader only)
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/dmq_metadata}
+    username: ${DB_USERNAME:dmq_user}
+    password: ${DB_PASSWORD:dmq_password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false  # Set to true for debugging
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+# KRaft Mode Configuration (Raft-based Controller)
+kraft:
+  # This metadata service node configuration
+  # Node ID must match one of the metadata service IDs in config/services.json
+  node-id: ${NODE_ID:1}
+
+  # Raft cluster configuration
+  # NOTE: Cluster nodes are now loaded from config/services.json (metadata-services section)
+  # The 'cluster.nodes' section below is IGNORED and kept only for reference
+  cluster:
+    host: localhost  # Default host for this node
+    # nodes: []  # Loaded from config/services.json instead
+
+  # Raft consensus settings
+  raft:
+    election-timeout-ms: 1000
+    heartbeat-interval-ms: 300
+    snapshot-interval-records: 10000
+    log-dir: ${LOG_DIR:./data/controller-logs}
+
+# Controller Configuration
+controller:
+  # Broker heartbeat settings
+  broker-heartbeat-interval-ms: 3000
+  broker-session-timeout-ms: 10000
+
+# Metadata Service Configuration
+metadata:
+  # Heartbeat monitoring (Phase 5)
+  heartbeat:
+    timeout-ms: 30000        # Broker considered dead after 30 seconds without heartbeat
+    check-interval-ms: 10000 # Check for stale heartbeats every 10 seconds
+
+# Service Pairing Configuration
+dmq:
+  service-pairing:
+    storage-node:
+      url: ${STORAGE_NODE_URL:http://localhost:8081}  # Default for node 1, can be overridden
+      broker-id: ${BROKER_ID:1}
+  
+  # JWT Security Configuration
+  security:
+    jwt:
+      access-token-expiry-seconds: 900  # 15 minutes
+      issuer: "dmq-cluster"
+      audience: "dmq-clients"
+    
+    # Hardcoded users (no database required)
+    users:
+      - username: admin
+        password: admin123
+        roles:
+          - ADMIN
+      - username: producer1
+        password: prod123
+        roles:
+          - PRODUCER
+      - username: consumer1
+        password: cons123
+        roles:
+          - CONSUMER
+      - username: app1
+        password: app123
+        roles:
+          - PRODUCER
+          - CONSUMER
+
+logging:
+  level:
+    com.distributedmq: DEBUG
+    org.springframework: INFO

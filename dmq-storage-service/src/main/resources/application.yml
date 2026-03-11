@@ -1,0 +1,72 @@
+server:
+  port: ${SERVER_PORT:8081}  # Use SERVER_PORT environment variable or default to 8081
+
+spring:
+  application:
+    name: dmq-storage-service
+
+# DMQ Storage Service Configuration
+dmq:
+  storage:
+    # Broker Configuration - Environment variable overrides only
+    broker:
+      id: ${BROKER_ID:}
+      host: ${BROKER_HOST:}
+      port: ${BROKER_PORT:}
+      data-dir: ${DATA_DIR:}
+
+    # Metadata Service Configuration
+    metadata:
+      service-url: ${METADATA_SERVICE_URL:}
+
+    # WAL Configuration
+    wal:
+      segment-size-bytes: ${WAL_SEGMENT_SIZE_BYTES:}
+      flush-interval-ms: ${WAL_FLUSH_INTERVAL_MS:}
+      retention-check-interval-ms: ${WAL_RETENTION_CHECK_INTERVAL_MS:}
+      data-dir: ${WAL_DATA_DIR:}
+      logs-dir: ${LOGS_DIR:}
+      
+      # Batch Write Optimization (toggle)
+      batch-write-enabled: ${WAL_BATCH_WRITE_ENABLED:true}  # true = atomic batch writes, false = individual writes
+      batch-write-max-messages: ${WAL_BATCH_WRITE_MAX_MESSAGES:250}  # Max messages per batch (memory safety)
+
+    # Replication Configuration
+    replication:
+      fetch-max-bytes: ${REPLICATION_FETCH_MAX_BYTES:}
+      fetch-max-wait-ms: ${REPLICATION_FETCH_MAX_WAIT_MS:}
+      replica-lag-time-max-ms: ${REPLICATION_REPLICA_LAG_TIME_MAX_MS:}
+      
+      # Catch-Up Replication Configuration
+      catchup:
+        enabled: true                # Enable catch-up replication
+        threshold: 50                # Trigger catch-up if follower is > 50 messages behind
+        batch-size: 250              # Send 250 messages per catch-up batch
+        # scan-interval is fixed at 10 seconds via @Scheduled(fixedDelay = 10000)
+
+    # Consumer Configuration
+    consumer:
+      default-max-messages: ${CONSUMER_DEFAULT_MAX_MESSAGES:}
+  
+  # JWT Security Configuration
+  security:
+    jwt:
+      access-token-expiry-seconds: 900  # 15 minutes
+      issuer: "dmq-cluster"
+      audience: "dmq-clients"
+
+# Storage Service Metadata Configuration
+storage:
+  metadata:
+    periodic-refresh-interval-ms: 120000  # Force refresh every 2 minutes
+  
+  heartbeat:
+    version-mismatch-threshold: 3         # 3 consecutive mismatches trigger refresh
+  
+  replication:
+    lag-report-interval-ms: 15000         # Report lag every 15 seconds
+
+logging:
+  level:
+    com.distributedmq: DEBUG
+    org.springframework: INFO

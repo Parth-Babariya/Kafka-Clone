@@ -1,0 +1,21 @@
+# Sample batch messages file
+# Format: key:value or just value
+
+# Orders with keys
+order-001:{"orderId": "001", "amount": 100.50, "status": "pending"}
+order-002:{"orderId": "002", "amount": 250.00, "status": "confirmed"}
+order-003:{"orderId": "003", "amount": 75.25, "status": "pending"}
+
+# Log messages without keys
+Application started successfully
+Processing batch job #12345
+User login: alice@example.com
+Database connection established
+Cache refreshed successfully
+
+# Events with keys
+user-100:USER_LOGIN
+user-101:USER_LOGOUT
+user-102:USER_REGISTER
+payment-200:PAYMENT_SUCCESS
+payment-201:PAYMENT_FAILED

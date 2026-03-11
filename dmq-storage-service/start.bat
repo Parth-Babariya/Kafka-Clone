@@ -1,0 +1,1 @@
+$env:SERVER_PORT=8081; $env:BROKER_ID=101; mvn spring-boot:run

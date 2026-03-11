@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#fff"/>
+
+  <!-- Metadata nodes -->
+  <g id="metadata-cluster">
+    <text x="360" y="30" font-family="Arial" font-size="16" fill="#111">Metadata Cluster (Raft)</text>
+
+    <rect x="120" y="50" width="200" height="80" fill="#e8f0ff" stroke="#2b6cb0" stroke-width="2"/>
+    <text x="150" y="95" font-family="Arial" font-size="12" fill="#111">Metadata Node 1</text>
+    <text x="150" y="112" font-family="Arial" font-size="11" fill="#555">Port: 9091</text>
+
+    <rect x="400" y="50" width="200" height="80" fill="#fff3cd" stroke="#d69e2e" stroke-width="2"/>
+    <text x="430" y="85" font-family="Arial" font-size="12" fill="#111">Metadata Node 2 (LEADER)</text>
+    <text x="430" y="103" font-family="Arial" font-size="11" fill="#555">Port: 9092</text>
+
+    <rect x="680" y="50" width="200" height="80" fill="#e8f0ff" stroke="#2b6cb0" stroke-width="2"/>
+    <text x="710" y="95" font-family="Arial" font-size="12" fill="#111">Metadata Node 3</text>
+    <text x="710" y="112" font-family="Arial" font-size="11" fill="#555">Port: 9093</text>
+
+    <!-- RPC arrows among metadata nodes -->
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L6,3 z" fill="#333" />
+      </marker>
+    </defs>
+
+    <line x1="320" y1="90" x2="400" y2="90" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)" />
+    <line x1="600" y1="90" x2="680" y2="90" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)" />
+    <line x1="400" y1="130" x2="400" y2="200" stroke="#999" stroke-dasharray="4" />
+
+    <text x="360" y="45" font-family="Arial" font-size="11" fill="#333">AppendEntries / RequestVote</text>
+  </g>
+
+  <!-- DB -->
+  <g id="db">
+    <rect x="360" y="230" width="280" height="70" fill="#f0fff4" stroke="#2f855a" stroke-width="2"/>
+    <text x="380" y="255" font-family="Arial" font-size="12" fill="#111">DB: raft_log</text>
+    <text x="380" y="275" font-family="Arial" font-size="12" fill="#111">metadata: brokers, topics, partitions</text>
+
+    <!-- arrows from metadata nodes to DB -->
+    <line x1="220" y1="130" x2="380" y2="230" stroke="#666" stroke-width="1" marker-end="url(#arrow)" />
+    <line x1="500" y1="130" x2="500" y2="230" stroke="#666" stroke-width="1" marker-end="url(#arrow)" />
+    <line x1="760" y1="130" x2="640" y2="230" stroke="#666" stroke-width="1" marker-end="url(#arrow)" />
+  </g>
+
+  <!-- Brokers -->
+  <g id="brokers">
+    <text x="60" y="340" font-family="Arial" font-size="14" fill="#111">Storage Brokers</text>
+
+    <rect x="40" y="360" width="140" height="60" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+    <text x="60" y="385" font-family="Arial" font-size="11">Broker 101</text>
+    <text x="60" y="402" font-family="Arial" font-size="11" fill="#555">Port: 8081</text>
+
+    <rect x="220" y="360" width="140" height="60" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+    <text x="240" y="385" font-family="Arial" font-size="11">Broker 102</text>
+    <text x="240" y="402" font-family="Arial" font-size="11" fill="#555">Port: 8082</text>
+
+    <rect x="400" y="360" width="140" height="60" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+    <text x="420" y="385" font-family="Arial" font-size="11">Broker 103</text>
+    <text x="420" y="402" font-family="Arial" font-size="11" fill="#555">Port: 8083</text>
+
+    <rect x="580" y="360" width="140" height="60" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+    <text x="600" y="385" font-family="Arial" font-size="11">Broker 104</text>
+    <text x="600" y="402" font-family="Arial" font-size="11" fill="#555">Port: 8084</text>
+
+    <!-- arrows from brokers to leader (Metadata Node 2) -->
+    <line x1="120" y1="360" x2="490" y2="130" stroke="#2d3748" stroke-width="1" marker-end="url(#arrow)" />
+    <line x1="300" y1="360" x2="490" y2="130" stroke="#2d3748" stroke-width="1" marker-end="url(#arrow)" />
+    <line x1="480" y1="360" x2="490" y2="130" stroke="#2d3748" stroke-width="1" marker-end="url(#arrow)" />
+    <line x1="660" y1="360" x2="490" y2="130" stroke="#2d3748" stroke-width="1" marker-end="url(#arrow)" />
+
+    <text x="610" y="330" font-family="Arial" font-size="11" fill="#333">discover / register / heartbeat</text>
+
+    <!-- push notification arrow from leader to brokers -->
+    <line x1="500" y1="110" x2="580" y2="360" stroke="#1a202c" stroke-width="1" marker-end="url(#arrow)" />
+    <text x="520" y="95" font-family="Arial" font-size="11" fill="#1a202c">CONTROLLER_CHANGED (push)</text>
+  </g>
+
+  <!-- Client -->
+  <g id="client">
+    <rect x="820" y="360" width="140" height="60" fill="#f7fafc" stroke="#4a5568" stroke-width="1"/>
+    <text x="840" y="385" font-family="Arial" font-size="11">Producer / Consumer</text>
+    <text x="840" y="402" font-family="Arial" font-size="11" fill="#555">(data-plane, TODO)</text>
+
+    <line x1="780" y1="390" x2="540" y2="390" stroke="#666" stroke-width="1" marker-end="url(#arrow)" />
+    <text x="610" y="380" font-family="Arial" font-size="11" fill="#666">produce / consume → Broker</text>
+  </g>
+
+  <!-- Side notes -->
+  <g id="notes">
+    <text x="40" y="480" font-family="Arial" font-size="12" fill="#111">Notes:</text>
+    <text x="40" y="500" font-family="Arial" font-size="11" fill="#333">• Heartbeat: Broker → Controller every 5s. Leader sends empty AppendEntries to followers ~1.5s.</text>
+    <text x="40" y="520" font-family="Arial" font-size="11" fill="#333">• Election timeout: 5–7s randomized. Failover measured ~8–10s in tests.</text>
+    <text x="40" y="540" font-family="Arial" font-size="11" fill="#333">• DB persists raft_log and metadata tables for state rebuild on failover.</text>
+  </g>
+</svg>

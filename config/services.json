@@ -1,0 +1,69 @@
+{
+  "services": {
+    "metadata-services": [
+      {
+        "id": 1,
+        "host": "localhost",
+        "port": 9091,
+        "url": "http://localhost:9091"
+      },
+      {
+        "id": 2,
+        "host": "localhost",
+        "port": 9092,
+        "url": "http://localhost:9092"
+      },
+      {
+        "id": 3,
+        "host": "localhost",
+        "port": 9093,
+        "url": "http://localhost:9093"
+      }
+    ],
+    "storage-services": [
+      {
+        "id": 101,
+        "host": "localhost",
+        "port": 8081,
+        "url": "http://localhost:8081"
+      },
+      {
+        "id": 102,
+        "host": "localhost",
+        "port": 8082,
+        "url": "http://localhost:8082"
+      },
+      {
+        "id": 103,
+        "host": "localhost",
+        "port": 8083,
+        "url": "http://localhost:8083"
+      },
+      {
+        "id": 104,
+        "host": "localhost",
+        "port": 8084,
+        "url": "http://localhost:8084"
+      },
+      {
+        "id": 105,
+        "host": "localhost",
+        "port": 8085,
+        "url": "http://localhost:8085"
+      }
+    ]
+  },
+  "controller": {
+    "electionTimeoutMs": 5000
+  },
+  "metadata": {
+    "sync": {
+      "syncTimeoutMs": 30000
+    }
+  },
+  "jwt": {
+    "secret": "dmq-secret-key-256-bits-for-hs256-signature-algorithm-change-in-production-please",
+    "algorithm": "HS256",
+    "access-token-expiry-seconds": 900
+  }
+}

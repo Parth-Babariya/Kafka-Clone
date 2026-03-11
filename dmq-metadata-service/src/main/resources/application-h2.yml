@@ -1,0 +1,83 @@
+server:
+  port: ${SERVER_PORT:9091}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+spring:
+  application:
+    name: dmq-metadata-service
+  main:
+    allow-circular-references: true
+
+  # H2 in-memory database for local testing
+  datasource:
+    url: jdbc:h2:mem:dmq_metadata_node${NODE_ID:1};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+# KRaft Mode Configuration (Raft-based Controller)
+kraft:
+  # This metadata service node configuration
+  node-id: ${NODE_ID:1}
+
+  # Raft cluster configuration (3 nodes)
+  cluster:
+    nodes:
+      - id: 1
+        host: localhost
+        port: 9091
+      - id: 2
+        host: localhost
+        port: 9092
+      - id: 3
+        host: localhost
+        port: 9093
+
+  # Raft consensus settings
+  raft:
+    election-timeout-ms: 1000
+    heartbeat-interval-ms: 300
+    snapshot-interval-records: 10000
+    log-dir: ${LOG_DIR:./data/controller-logs}
+
+# Controller Configuration
+controller:
+  # Broker heartbeat settings
+  broker-heartbeat-interval-ms: 3000
+  broker-session-timeout-ms: 10000
+
+logging:
+  level:
+    com.distributedmq: DEBUG
+    org.springframework: INFO
