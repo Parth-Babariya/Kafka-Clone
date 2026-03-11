@@ -357,7 +357,7 @@ Cluster healed
 ### 1. Clone and Build
 
 ```bash
-git clone https://github.com/AdarshOnGith/Kafka-Clone.git
+git clone https://github.com/Parth-Babariya/Kafka-Clone.git
 cd Kafka-Clone
 mvn clean install
 ```
